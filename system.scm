@@ -69,8 +69,11 @@ table ip nat {
 	     (nongnu packages linux)
 	     (gnu packages xorg)
 	     (gnu services docker)
+	     (gnu services herd)
 	     (gnu services sound)
-	     (gnu services virtualization))
+	     (gnu services virtualization)
+	     (gnu services shepherd))
+
 
 (use-service-modules cups desktop networking ssh xorg nix)
 (use-package-modules package-management)
@@ -119,12 +122,15 @@ table ip nat {
           (bluetooth-service #:auto-enable? #t)
 	  (service docker-service-type)
 	  (service tor-service-type)
-	  (service nix-service-type)	
+	  (service nix-service-type)
 	  (modify-services %desktop-services
 			   (gdm-service-type config =>
 					     (gdm-configuration
 					      (default-user "twill")
-					      (auto-login? #t))))))
+					      (auto-login? #t)))
+			   (upower-service-type config =>
+						(upower-configuration
+						 (use-percentage-for-policy? #t))))))
   
   (bootloader (bootloader-configuration
                 (bootloader grub-efi-bootloader)
